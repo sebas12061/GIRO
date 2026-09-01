@@ -1,0 +1,25 @@
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Node / Angular
+node_modules/
+dist/
+out-tsc/
+.angular/
+
+# Java / Spring Boot
+.gradle/
+build/
+out/
+*.class
+*.jar
+
+# PostgreSQL / Docker
+postgres-data/
+.env
+
+# OS
+.DS_Store
+Thumbs.db
