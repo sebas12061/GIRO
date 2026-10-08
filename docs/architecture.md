@@ -72,6 +72,16 @@ El backend manejará la lógica crítica del negocio:
 - turnos, gastos y cierres
 - reportes y auditoría
 
+### Organización del backend
+
+El backend usa un monolito modular organizado por dominio. Cada módulo agrupa sus propios controladores, servicios, repositorios, DTOs y mapeadores. Por ejemplo, `pedidos/` contiene el flujo de pedidos sin repartir sus clases en carpetas técnicas globales.
+
+Las entidades JPA no se exponen directamente en REST. Los DTOs y mapeadores MapStruct forman el contrato externo.
+
+Los cambios de estado del pedido se validan en una máquina de estados centralizada. Los pagos usan Strategy para permitir nuevos medios sin modificar el flujo existente.
+
+Las operaciones críticas publican eventos de dominio. Auditoría escucha esos eventos y AOP identifica las operaciones anotadas, manteniendo la independencia entre módulos.
+
 ## 6. Capa de persistencia
 
 PostgreSQL almacenará:
@@ -102,6 +112,9 @@ PostgreSQL almacenará:
 - permisos
 - usuarios activos/inactivos
 - control de acceso por módulo
+- JWT stateless
+- BCrypt para contraseñas
+- autorización por método con `@PreAuthorize`
 
 ### Configuración
 

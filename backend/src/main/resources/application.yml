@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: giro-backend
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/giro_db}
+    username: ${SPRING_DATASOURCE_USERNAME:giro_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:giro_pass}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: ${SERVER_PORT:8080}
+
+giro:
+  security:
+    jwt:
+      secret: ${GIRO_JWT_SECRET:giro-development-secret-key-change-in-production-2026}
+      expiration-ms: ${GIRO_JWT_EXPIRATION_MS:3600000}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true

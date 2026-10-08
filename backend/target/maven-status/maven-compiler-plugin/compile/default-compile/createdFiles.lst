@@ -1,0 +1,5 @@
+com\giro\backend\restaurant\Restaurant.class
+com\giro\backend\restaurant\RestaurantStatus.class
+com\giro\backend\GiroApplication.class
+com\giro\backend\config\SecurityConfig.class
+com\giro\backend\api\HealthController.class

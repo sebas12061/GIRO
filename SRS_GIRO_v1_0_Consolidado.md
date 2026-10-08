@@ -1,0 +1,770 @@
+# GIRO
+
+## Gestión Integral de Restaurantes y Operaciones
+
+Especificación de Requisitos de Software (SRS)  
+**Versión 1.0 — Documento consolidado y cerrado**
+
+Proyecto académico — Ingeniería de Software III  
+2026
+
+# Control del documento
+
+| Campo                   | Valor                                                 |
+|-------------------------|-------------------------------------------------------|
+| Nombre del sistema      | GIRO — Gestión Integral de Restaurantes y Operaciones |
+| Tipo                    | Sistema de información web modular                    |
+| Versión                 | 1.0                                                   |
+| Estado                  | Consolidado / documentación cerrada                   |
+| Dominio                 | Gestión y operación de restaurantes                   |
+| Frontend propuesto      | Angular                                               |
+| Backend propuesto       | Spring Boot                                           |
+| Base de datos propuesta | PostgreSQL                                            |
+| API                     | REST / OpenAPI                                        |
+| Despliegue              | Docker                                                |
+
+## Historial de versiones
+
+| Versión | Descripción                                          |
+|---------|------------------------------------------------------|
+| 0.x     | Levantamiento y refinamiento de requisitos           |
+| 1.0     | Consolidación final de SRS, UML, reglas y modelo E-R |
+
+# Tabla de contenido
+
+1\. Introducción
+
+2\. Planteamiento del problema
+
+3\. Objetivos
+
+4\. Alcance
+
+5\. Principios de diseño y modularidad
+
+6\. Descripción general del sistema
+
+7\. Actores
+
+8\. Requisitos funcionales
+
+9\. Requisitos no funcionales
+
+10\. Reglas de negocio
+
+11\. Historias de usuario
+
+12\. Casos de uso
+
+13\. Modelado de procesos y estados
+
+14\. Modelo E-R
+
+15\. Diccionario conceptual de datos
+
+16\. Arquitectura propuesta
+
+17\. Seguridad y auditoría
+
+18\. Reportes
+
+19\. Criterios de aceptación
+
+20\. Trazabilidad
+
+21\. Decisiones definitivas y cierre
+
+# 1. Introducción
+
+## 1.1 Propósito
+
+Este documento especifica los requisitos funcionales, no funcionales, reglas de negocio, actores, procesos, historias de usuario, casos de uso, modelo conceptual y decisiones de diseño de GIRO. El sistema nace a partir del levantamiento de procesos de un restaurante de referencia en Armenia, Quindío, pero se diseña como una solución modular y configurable para diferentes nichos gastronómicos.
+
+## 1.2 Contexto
+
+GIRO busca transformar procesos que actualmente se apoyan en papel, comunicación verbal y cálculos manuales, centralizando pedido → cocina → venta → caja → compra → inventario → turnos → cierre → reporte.
+
+**Flujo principal de GIRO**
+
+```mermaid
+flowchart LR
+    Pedido --> Cocina --> Venta --> Pago --> Caja --> Cierre --> Reporte
+```
+
+# 2. Planteamiento del problema
+
+Los restaurantes gestionan de manera simultánea pedidos, mesas, domicilios, cocina, ventas, pagos, caja, gastos, compras, productos, empleados y reportes. Cuando estas actividades se ejecutan mediante registros físicos y comunicación verbal, aumenta el riesgo de errores, pérdida de información, inconsistencias y dificultad para consultar históricos.
+
+- Errores humanos y cálculos manuales.
+- Poca trazabilidad de modificaciones y cancelaciones.
+- Dificultad para reconstruir el comportamiento de la caja.
+- Registros separados de compras, productos y ventas.
+- Dependencia de procedimientos aprendidos informalmente.
+- Dificultad para obtener reportes históricos.
+
+# 3. Objetivos
+
+## 3.1 Objetivo general
+
+Desarrollar un sistema de información modular que permita digitalizar, centralizar y automatizar los principales procesos operativos, administrativos y financieros de un restaurante.
+
+## 3.2 Objetivos específicos
+
+1.  Digitalizar el registro y seguimiento de pedidos.
+2.  Gestionar mesas y servicios a domicilio.
+3.  Facilitar la consulta del estado de pedidos por cocina y salón.
+4.  Registrar ventas y pagos en efectivo, transferencia y fiado.
+5.  Gestionar los pagos en efectivo, transferencia y fiado.
+6.  Automatizar los cálculos asociados al cuadre de caja.
+7.  Registrar gastos y movimientos financieros.
+8.  Gestionar productos mediante unidades operativas configurables.
+9.  Gestionar entradas, consumes y existencias finales.
+10. Gestionar compras y proveedores.
+11. Gestionar empleados y turnos.
+12. Generar reportes históricos y mensuales.
+13. Mantener trazabilidad mediante auditoría.
+14. Permitir configuración para distintos tipos de restaurantes.
+
+# 4. Alcance
+
+## 4.1 Incluido
+
+**Operación**
+
+- mesas
+- pedidos
+- comandas digitales
+- modificaciones
+- cancelaciones
+- cocina
+- domicilios
+- menús
+- productos
+- precios
+
+**Ventas**
+
+- generación de ventas
+- pagos
+- efectivo
+- transferencias
+- fiados
+
+**Caja**
+
+- apertura
+- base inicial
+- gastos
+- movimientos
+- cuadre
+- efectivo esperado
+- efectivo real
+- diferencia
+- cierre
+- auditoría de modificaciones
+
+**Productos**
+
+- categoría
+- unidades operativas
+- entradas
+- consumos
+- existencias finales
+- productos utilizados en diferentes procesos
+
+**Compras**
+
+- proveedores
+- compras
+- detalles de compra
+- valores
+- historial
+
+**Personal**
+
+- empleados
+- turnos
+- valores de turno
+
+**Información**
+
+- reportes
+- históricos
+- consultas
+- auditoría
+
+## 4.2 Fuera del alcance inicial
+
+- Integración con Rappi/Uber Eats u otras plataformas.
+- Facturación electrónica externa.
+- Integración bancaria automática.
+- Contabilidad empresarial completa.
+- Nómina laboral completa.
+- GPS y gestión avanzada de rutas.
+- Compras automáticas.
+- Predicción de demanda mediante IA.
+
+# 5. Principios de diseño y modularidad
+
+GIRO no se limita a almuerzos ejecutivos. Los conceptos de sopa, principio, proteína o ensalada son configuraciones del restaurante de referencia, no restricciones del software.
+
+| Principio           | Aplicación                                                                 |
+|---------------------|----------------------------------------------------------------------------|
+| Configurabilidad    | Productos, categorías, unidades, menús, precios y mesas son configurables. |
+| Modularidad         | Los procesos se separan en módulos independientes pero integrables.        |
+| Unidades operativas | El inventario puede manejar porción, unidad, vaso, plato, libra, etc.      |
+| Extensibilidad      | Se pueden agregar módulos sin rediseñar todo el sistema.                   |
+| Multi-restaurante   | La entidad RESTAURANTE permite evolucionar a varios establecimientos.      |
+
+# 6. Descripción general del sistema
+
+Flujo de referencia:
+
+**Flujo principal de GIRO**
+
+```mermaid
+flowchart LR
+    Pedido --> Cocina --> Venta --> Pago --> Caja --> Cierre --> Reporte
+```
+
+## 6.1 Módulos
+
+- Módulo 1 — Seguridad
+- Módulo 2 — Configuración
+- Módulo 3 — Menú
+- Módulo 4 — Pedidos
+- Módulo 5 — Cocina
+- Módulo 6 — Ventas y pagos
+- Módulo 7 — Fiados
+- Módulo 8 — Caja
+- Módulo 9 — Compras
+- Módulo 10 — Productos
+- Módulo 11 — Personal
+- Módulo 12 — Reportes
+- Módulo 13 — Auditoría
+
+# 7. Actores
+
+| Actor                | Responsabilidad                                                        |
+|----------------------|------------------------------------------------------------------------|
+| Administrador        | Configuración, usuarios, permisos, auditoría y administración general. |
+| Encargado de caja    | Pagos, movimientos y cuadre.                                           |
+| Personal de salón    | Mesas, pedidos, clientes y domicilios.                                 |
+| Personal de cocina   | Preparación y estados de pedidos.                                      |
+| Encargado de compras | Registro y gestión de compras.                                         |
+| Cliente              | Solicita productos y realiza pagos.                                    |
+| Proveedor            | Suministra productos.                                                  |
+
+# 8. Requisitos funcionales
+
+## Seguridad y configuración
+
+| ID    | Requisito                                                                 |
+|-------|---------------------------------------------------------------------------|
+| RF-01 | Autenticación mediante credenciales válidas.                              |
+| RF-02 | Crear, modificar, activar y desactivar usuarios.                          |
+| RF-03 | Asignar roles.                                                            |
+| RF-04 | Gestionar permisos.                                                       |
+| RF-05 | Configurar mesas, capacidades y estados.                                  |
+| RF-06 | Registrar categorías y productos.                                         |
+| RF-07 | Configurar unidades operativas (porción, unidad, vaso, plato, libra, etc.) |
+
+## Menú y pedidos
+
+| ID    | Requisito                                                |
+|-------|----------------------------------------------------------|
+| RF-08 | Crear y administrar menús.                               |
+| RF-09 | Asociar opciones de menú a productos/categorías.         |
+| RF-10 | Crear pedidos con numeración.                            |
+| RF-11 | Asociar pedidos a mesas o domicilios.                    |
+| RF-12 | Agregar, editar y eliminar detalles de pedidos abiertos. |
+| RF-13 | Agregar observaciones y adicionales.                     |
+| RF-14 | Cancelar pedidos.                                        |
+| RF-15 | Consultar estados de preparación.                        |
+
+## Cocina, ventas y pagos
+
+| ID    | Requisito                                         |
+|-------|---------------------------------------------------|
+| RF-16 | Consultar pedidos pendientes para cocina.         |
+| RF-17 | Registrar venta al momento del cobro.             |
+| RF-18 | Registrar pagos en efectivo.                      |
+| RF-19 | Registrar transferencias y su verificación.       |
+| RF-20 | Permitir múltiples pagos para una venta.          |
+| RF-21 | Registrar fiados según las modalidades definidas. |
+
+## Caja
+
+| ID    | Requisito                                                    |
+|-------|--------------------------------------------------------------|
+| RF-22 | Abrir caja con base inicial.                                 |
+| RF-23 | Registrar gastos y movimientos.                              |
+| RF-24 | Recuperar automáticamente valores derivados de ventas/pagos. |
+| RF-25 | Calcular efectivo esperado.                                  |
+| RF-26 | Registrar efectivo real.                                     |
+| RF-27 | Calcular diferencia, sobrante o faltante.                    |
+| RF-28 | Cerrar cuadre.                                               |
+| RF-29 | Restringir edición posterior a usuarios autorizados.         |
+
+## Compras, productos y personal
+
+| ID    | Requisito                                                |
+|-------|----------------------------------------------------------|
+| RF-30 | Registrar proveedores.                                   |
+| RF-31 | Registrar compras y detalles.                            |
+| RF-32 | Registrar movimientos operativos de productos.           |
+| RF-33 | Registrar existencias finales mediante cierre operativo. |
+| RF-34 | Registrar empleados.                                     |
+| RF-35 | Asignar turnos y valores.                                |
+
+## Reportes y auditoría
+
+| ID    | Requisito                                                |
+|-------|----------------------------------------------------------|
+| RF-36 | Consultar ventas, gastos, compras, pagos, fiados y caja. |
+| RF-37 | Consultar históricos.                                    |
+| RF-38 | Generar reportes mensuales.                              |
+| RF-39 | Registrar auditoría de operaciones críticas.             |
+
+# 9. Requisitos no funcionales
+
+| ID     | Requisito                                                                              |
+|--------|----------------------------------------------------------------------------------------|
+| RNF-01 | Seguridad: acceso restringido según roles y permisos.                                  |
+| RNF-02 | Integridad: evitar estados y relaciones inconsistentes.                                |
+| RNF-03 | Disponibilidad: funcionamiento durante la jornada operativa.                           |
+| RNF-04 | Usabilidad: minimizar pasos en tareas frecuentes.                                      |
+| RNF-05 | Rendimiento: respuestas adecuadas para operaciones de restaurante.                     |
+| RNF-06 | Escalabilidad: permitir nuevos restaurantes y módulos.                                 |
+| RNF-07 | Mantenibilidad: arquitectura modular y separada por responsabilidades.                 |
+| RNF-08 | Trazabilidad: auditar operaciones críticas.                                            |
+| RNF-09 | Persistencia: conservar información histórica.                                         |
+| RNF-10 | Credenciales: almacenar contraseñas mediante mecanismos seguros, nunca en texto plano. |
+
+# 10. Reglas de negocio
+
+| Código | Regla                                                                           |
+|--------|---------------------------------------------------------------------------------|
+| RN-01  | Una mesa puede tener un pedido activo.                                          |
+| RN-02  | Un pedido permanece abierto hasta completar el pago.                            |
+| RN-03  | Un pedido cerrado no se modifica por el flujo normal.                           |
+| RN-04  | Los pedidos abiertos pueden modificarse.                                        |
+| RN-05  | Los pedidos pueden cancelarse.                                                  |
+| RN-06  | La venta se genera cuando se realiza el cobro.                                  |
+| RN-07  | Una venta puede tener múltiples pagos.                                          |
+| RN-08  | No es obligatorio dividir formalmente la cuenta.                                |
+| RN-09  | Los descuentos no forman parte de la operación actual.                          |
+| RN-10  | Solo usuarios autorizados pueden registrar pagos.                               |
+| RN-11  | Solo usuarios autorizados pueden realizar el cuadre.                            |
+| RN-12  | Solo usuarios administrativos pueden modificar cuadres cerrados.                |
+| RN-13  | Las modificaciones administrativas deben auditarse.                             |
+| RN-14  | Los productos pueden manejar unidades operativas diferentes.                    |
+| RN-15  | No es obligatorio controlar productos por gramos.                               |
+| RN-16  | Los clientes de fiado deben estar identificados.                                |
+| RN-17  | Las transferencias deben verificarse antes de confirmarse.                      |
+| RN-18  | GIRO no bloquea la preparación fuera del orden de llegada.                      |
+| RN-19  | La organización interna de cocina es configurable por cada restaurante.         |
+| RN-20  | Productos, menús y categorías no deben depender de un único nicho gastronómico. |
+
+# 11. Historias de usuario
+
+| ID    | Historia de usuario                                                                           |
+|-------|-----------------------------------------------------------------------------------------------|
+| HU-01 | Como empleado de salón, quiero registrar un pedido para que cocina conozca lo solicitado.     |
+| HU-02 | Como empleado de salón, quiero modificar un pedido abierto para corregir cambios del cliente. |
+| HU-03 | Como empleado de cocina, quiero consultar pedidos pendientes para preparar los productos.     |
+| HU-04 | Como encargado de caja, quiero registrar pagos para actualizar ventas y cuadre.               |
+| HU-05 | Como encargado de caja, quiero que GIRO calcule el efectivo esperado para reducir errores.    |
+| HU-06 | Como administrador, quiero consultar cuadres históricos.                                      |
+| HU-07 | Como administrador, quiero modificar un cuadre cerrado y dejar evidencia de la modificación.  |
+| HU-08 | Como empleado, quiero registrar consumos usando unidades operativas.                          |
+| HU-09 | Como encargado, quiero registrar compras y proveedores.                                       |
+| HU-10 | Como administrador, quiero consultar reportes mensuales.                                      |
+| HU-11 | Como administrador, quiero configurar productos y menús para distintos restaurantes.          |
+| HU-12 | Como encargado, quiero registrar fiados y sus saldos.                                         |
+
+# 12. Casos de uso
+
+| ID    | Caso de uso                      | Actor              | Requisitos |
+|-------|----------------------------------|--------------------|------------|
+| CU-01 | Iniciar sesión                   | Usuario            | RF-01      |
+| CU-02 | Gestionar usuarios               | Administrador      | RF-02      |
+| CU-03 | Gestionar roles y permisos       | Administrador      | RF-03/04   |
+| CU-04 | Configurar mesas                 | Administrador      | RF-05      |
+| CU-05 | Gestionar productos              | Administrador      | RF-06/07   |
+| CU-06 | Gestionar menú                   | Administrador      | RF-08/09   |
+| CU-07 | Crear pedido                     | Salón              | RF-10/11   |
+| CU-08 | Modificar pedido                 | Salón              | RF-12/13   |
+| CU-09 | Cancelar pedido                  | Salón              | RF-14      |
+| CU-10 | Gestionar preparación            | Cocina             | RF-15/16   |
+| CU-11 | Generar venta                    | Caja               | RF-17      |
+| CU-12 | Registrar pago                   | Caja               | RF-18/20   |
+| CU-13 | Verificar transferencia          | Caja               | RF-19      |
+| CU-14 | Gestionar fiado                  | Caja/Administrador | RF-21      |
+| CU-15 | Abrir caja                       | Caja               | RF-22      |
+| CU-16 | Registrar gasto                  | Caja               | RF-23      |
+| CU-17 | Realizar cuadre                  | Caja               | RF-24/27   |
+| CU-18 | Cerrar cuadre                    | Caja               | RF-28      |
+| CU-19 | Modificar cuadre cerrado         | Administrador      | RF-29      |
+| CU-20 | Registrar compra                 | Compras            | RF-30/31   |
+| CU-21 | Registrar movimiento de producto | Operativo          | RF-32      |
+| CU-22 | Registrar cierre operativo       | Operativo          | RF-33      |
+| CU-23 | Gestionar turnos                 | Administrador      | RF-34/35   |
+| CU-24 | Consultar reportes               | Administrador      | RF-36/38   |
+| CU-25 | Consultar auditoría              | Administrador      | RF-39      |
+
+# 13. Modelado de procesos y estados
+
+## 13.1 Estados del pedido
+
+CREADO → CONFIRMADO → EN_PREPARACION → PREPARADO → SERVIDO → PENDIENTE_PAGO → PAGADO → CERRADO
+
+Ruta alternativa: CREADO/CONFIRMADO/EN_PREPARACION → CANCELADO, según las condiciones de la operación.
+
+## 13.2 Proceso de caja
+
+**Flujo conceptual del cuadre**
+
+```mermaid
+flowchart LR
+    BI[Base inicial] --> V[Ventas] --> G[Gastos] --> TF["Transferencias / Fiados"] --> EE[Efectivo esperado] --> ER[Efectivo real] --> D[Diferencia]
+```
+
+Fórmula conceptual: EFECTIVO ESPERADO = BASE + INGRESOS EN EFECTIVO − GASTOS − VALORES QUE NO DEBEN ESTAR FÍSICAMENTE EN CAJA.
+
+DIFERENCIA = EFECTIVO REAL − EFECTIVO ESPERADO. Un resultado positivo indica sobrante; cero, cuadre exacto; negativo, faltante.
+
+## 13.3 Inventario operativo
+
+| Concepto  | Significado                                            |
+|-----------|--------------------------------------------------------|
+| AMANECE   | Existencia proveniente del día anterior.               |
+| LLEGA     | Cantidad recibida durante el día.                      |
+| FACT_DESA | Consumo en desayunos.                                  |
+| FACT_ALMU | Consumo en almuerzos.                                  |
+| REST      | Consumo del personal.                                  |
+| QUED      | Cantidad que queda al finalizar la jornada.            |
+| G         | Cantidad gastada/consumida según el formato operativo. |
+
+Ejemplo: 10 porciones que amanecen + 5 que llegan − 8 consumidas en almuerzo − 1 consumida por personal = 6 porciones que quedan.
+
+## 13.4 Cierre operativo
+
+QUED se modela como una fotografía del estado final del producto y no como una compra o entrada tradicional. Por ello se utiliza CIERRE_OPERATIVO con su detalle.
+
+# 14. Modelo E-R
+
+El siguiente modelo conceptual consolida las entidades necesarias para representar la operación y mantener el carácter modular del sistema.
+
+**Modelo E-R conceptual consolidado** (las cardinalidades coinciden con la tabla 14.1)
+
+```mermaid
+erDiagram
+    RESTAURANTE ||--o{ USUARIO : tiene
+    RESTAURANTE ||--o{ EMPLEADO : tiene
+    RESTAURANTE ||--o{ MESA : tiene
+    RESTAURANTE ||--o{ PRODUCTO : tiene
+    RESTAURANTE ||--o{ CLIENTE : tiene
+    RESTAURANTE ||--o{ PROVEEDOR : tiene
+    RESTAURANTE ||--o{ AUDITORIA : registra
+    EMPLEADO ||--o{ TURNO : cumple
+    USUARIO }o--o{ ROL : asigna
+    ROL }o--o{ PERMISO : otorga
+    CATEGORIA ||--o{ PRODUCTO : clasifica
+    UNIDAD_OPERATIVA ||--o{ PRODUCTO : mide
+    MENU ||--o{ OPCION_MENU : contiene
+    MESA ||--o{ PEDIDO : "historico"
+    CLIENTE ||--o{ PEDIDO : realiza
+    PEDIDO ||--o{ DETALLE_PEDIDO : contiene
+    PEDIDO |o--|| VENTA : genera
+    VENTA ||--o{ PAGO : recibe
+    CLIENTE ||--o{ FIADO : tiene
+    CAJA ||--o{ MOVIMIENTO_CAJA : registra
+    CAJA ||--|| CUADRE : cierra
+    PROVEEDOR ||--o{ COMPRA : suministra
+    COMPRA ||--o{ DETALLE_COMPRA : contiene
+    PRODUCTO ||--o{ MOVIMIENTO_PRODUCTO : tiene
+    CIERRE_OPERATIVO ||--o{ DETALLE_CIERRE_OPERATIVO : contiene
+```
+
+## 14.1 Relaciones principales
+
+| Relación                | Cardinalidad  |
+|-------------------------|---------------|
+| Restaurante → Usuario   | 1:N           |
+| Restaurante → Empleado  | 1:N           |
+| Restaurante → Mesa      | 1:N           |
+| Restaurante → Producto  | 1:N           |
+| Restaurante → Cliente   | 1:N           |
+| Restaurante → Proveedor | 1:N           |
+| Empleado → Turno        | 1:N           |
+| Usuario ↔ Rol           | N:M           |
+| Rol ↔ Permiso           | N:M           |
+| Categoría → Producto    | 1:N           |
+| Unidad → Producto       | 1:N           |
+| Menú → Opción           | 1:N           |
+| Mesa → Pedido           | 1:N histórico |
+| Cliente → Pedido        | 1:N           |
+| Pedido → Detalle        | 1:N           |
+| Pedido → Venta          | 0..1:1        |
+| Venta → Pago            | 1:N           |
+| Cliente → Fiado         | 1:N           |
+| Caja → Movimiento       | 1:N           |
+| Caja → Cuadre           | 1:1           |
+| Proveedor → Compra      | 1:N           |
+| Compra → Detalle        | 1:N           |
+| Producto → Movimiento   | 1:N           |
+| Cierre → Detalle        | 1:N           |
+| Restaurante → Auditoría | 1:N           |
+
+# 15. Diccionario conceptual de datos
+
+## RESTAURANTE
+
+Atributos: id, nombre, identificación, direccion, telefono, estado, fechaCreacion
+
+## USUARIO
+
+Atributos: id, restaurante_id, empleado_id, username, password_hash, estado, fechaCreacion
+
+## ROL
+
+Atributos: id, nombre, descripcion
+
+## PERMISO
+
+Atributos: id, nombre, descripcion
+
+## EMPLEADO
+
+Atributos: id, restaurante_id, nombre, documento, telefono, estado
+
+## TURNO
+
+Atributos: id, empleado_id, fecha, tipo, horaInicio, horaFin, valor, estado
+
+## MESA
+
+Atributos: id, restaurante_id, numero, capacidad, estado
+
+## CATEGORIA
+
+Atributos: id, restaurante_id, nombre, descripcion, estado
+
+## UNIDAD_OPERATIVA
+
+Atributos: id, nombre, abreviatura, tipo
+
+## PRODUCTO
+
+Atributos: id, restaurante_id, categoria_id, unidad_id, nombre, descripcion, estado
+
+## MENU
+
+Atributos: id, restaurante_id, nombre, fechaInicio, fechaFin, estado
+
+## OPCION_MENU
+
+Atributos: id, menu_id, producto_id, categoria_id, nombre, precio, orden, estado
+
+## CLIENTE
+
+Atributos: id, restaurante_id, nombre, telefono, direccionReferencia, tipoCliente, estado
+
+## PEDIDO
+
+Atributos: id, restaurante_id, numero, mesa_id, cliente_id, usuario_id, tipoServicio, estado, fechaHora, observaciones, total
+
+## DETALLE_PEDIDO
+
+Atributos: id, pedido_id, producto_id, opcion_menu_id, cantidad, precioUnitario, subtotal, observaciones, estado
+
+## VENTA
+
+Atributos: id, pedido_id, fechaHora, subtotal, total, estado
+
+## PAGO
+
+Atributos: id, venta_id, tipo, valor, fechaHora, referencia, estado
+
+## FIADO
+
+Atributos: id, cliente_id, tipo, fechaInicio, fechaVencimiento, saldo, estado
+
+## MOVIMIENTO_FIADO
+
+Atributos: id, fiado_id, venta_id, tipoMovimiento, valor, fechaHora, observacion
+
+## CAJA
+
+Atributos: id, restaurante_id, fecha, baseInicial, fechaApertura, fechaCierre, estado, usuarioApertura, usuarioCierre
+
+## MOVIMIENTO_CAJA
+
+Atributos: id, caja_id, tipo, concepto, valor, origen, fechaHora, usuario_id
+
+## CUADRE
+
+Atributos: id, caja_id, base, ventasEfectivo, transferencias, fiados, gastos, efectivoEsperado, efectivoReal, diferencia, fechaHora, usuario_id, estado
+
+## PROVEEDOR
+
+Atributos: id, restaurante_id, nombre, identificacion, telefono, direccion, estado
+
+## COMPRA
+
+Atributos: id, proveedor_id, caja_id, fecha, total, estado, observacion
+
+## DETALLE_COMPRA
+
+Atributos: id, compra_id, producto_id, cantidad, valorUnitario, subtotal
+
+## MOVIMIENTO_PRODUCTO
+
+Atributos: id, producto_id, fecha, tipoMovimiento, cantidad, unidad_id, referencia, usuario_id, observacion
+
+## CIERRE_OPERATIVO
+
+Atributos: id, restaurante_id, fecha, usuario_id, estado
+
+## DETALLE_CIERRE_OPERATIVO
+
+Atributos: id, cierre_id, producto_id, cantidadQueda, unidad_id, observacion
+
+## AUDITORIA
+
+Atributos: id, usuario_id, fechaHora, accion, entidad, entidadId, valorAnterior, valorNuevo, ip
+
+# 16. Arquitectura propuesta
+
+**Arquitectura propuesta de GIRO**
+
+```mermaid
+flowchart TD
+    U[Usuarios] --> F["Angular Frontend"] --> A["Spring Boot REST API"]
+    A --> M["Módulos de negocio"]
+    A --> S["Seguridad / Auditoría"]
+    M --> DB[(PostgreSQL)]
+    S --> DB
+```
+
+La arquitectura propuesta separa presentación, lógica de negocio, persistencia y preocupaciones transversales. Esto facilita pruebas, mantenimiento y evolución modular.
+
+| Capa         | Tecnología / responsabilidad                                         |
+|--------------|----------------------------------------------------------------------|
+| Frontend     | Angular; interfaces operativas y administrativas.                    |
+| API          | REST / OpenAPI; contrato de comunicación.                            |
+| Backend      | Spring Boot; lógica de negocio, validaciones, seguridad y servicios. |
+| Persistencia | PostgreSQL; almacenamiento relacional.                               |
+| Despliegue   | Docker; empaquetado y ejecución reproducible.                        |
+
+# 17. Seguridad y auditoría
+
+- Autenticación con credenciales seguras.
+- Autorización por roles y permisos.
+- Contraseñas almacenadas mediante hash seguro.
+- Auditoría de cambios críticos.
+- Restricción de modificación de cuadres cerrados.
+- Conservación del histórico de operaciones.
+
+## 17.1 Auditoría mínima
+
+| Campo         | Descripción                    |
+|---------------|--------------------------------|
+| usuario_id    | Usuario que ejecutó la acción. |
+| fechaHora     | Momento de la operación.       |
+| accion        | Tipo de acción realizada.      |
+| entidad       | Entidad afectada.              |
+| entidadId     | Registro afectado.             |
+| valorAnterior | Estado previo cuando aplique.  |
+| valorNuevo    | Nuevo estado cuando aplique.   |
+
+# 18. Reportes
+
+- Ventas por período.
+- Gastos por período.
+- Compras y proveedores.
+- Pagos por medio.
+- Transferencias.
+- Fiados y saldos.
+- Cuadres y diferencias.
+- Movimientos de productos.
+- Turnos y valores pagados.
+- Históricos mensuales.
+- Indicadores operativos configurables.
+
+Los reportes se entienden como reportes operativos y financieros del sistema, no como sustituto de un software contable especializado.
+
+# 19. Criterios de aceptación
+
+1. Un usuario autorizado puede iniciar sesión.
+2. Se pueden configurar productos y unidades.
+3. Se puede crear un menú.
+4. Se puede registrar una mesa.
+5. Se puede crear y numerar un pedido.
+6. Un pedido abierto puede modificarse y cancelarse.
+7. Cocina puede consultar pedidos pendientes.
+8. Se puede generar una venta al cobrar.
+9. Se pueden registrar pagos múltiples.
+10. Las transferencias pueden marcarse como verificadas.
+11. Se pueden registrar fiados.
+12. Se puede abrir caja y registrar base.
+13. Se registran gastos y movimientos.
+14. El sistema calcula el efectivo esperado.
+15. Se registra el efectivo real y se calcula la diferencia.
+16. Se puede cerrar el cuadre.
+17. Solo el administrador puede modificar un cuadre cerrado.
+18. Las modificaciones administrativas quedan auditadas.
+19. Se registran compras y proveedores.
+20. Se registran movimientos operativos y cierre de existencias.
+21. Se gestionan turnos.
+22. Se consultan históricos y reportes.
+23. El sistema puede configurarse para diferentes nichos.
+
+# 20. Trazabilidad
+
+| Área           | Requisitos / casos de uso | Entidades principales                           |
+|----------------|---------------------------|-------------------------------------------------|
+| Pedidos        | RF-10–15 / CU-07–10       | PEDIDO, DETALLE_PEDIDO, MESA, CLIENTE           |
+| Ventas y pagos | RF-17–21 / CU-11–14       | VENTA, PAGO, FIADO                              |
+| Caja           | RF-22–29 / CU-15–19       | CAJA, MOVIMIENTO_CAJA, CUADRE                   |
+| Compras        | RF-30–31 / CU-20          | PROVEEDOR, COMPRA, DETALLE_COMPRA               |
+| Productos      | RF-32–33 / CU-21–22       | PRODUCTO, MOVIMIENTO_PRODUCTO, CIERRE_OPERATIVO |
+| Personal       | RF-34–35 / CU-23          | EMPLEADO, TURNO                                 |
+| Reportes       | RF-36–38 / CU-24          | Múltiples entidades                             |
+| Auditoría      | RF-39 / CU-25             | AUDITORIA                                       |
+| Seguridad      | RF-01–04 / CU-01–03       | USUARIO, ROL, PERMISO                           |
+
+# 21. Decisiones definitivas y cierre
+
+| Decisión                                    | Estado             |
+|---------------------------------------------|--------------------|
+| Cliente en mesa obligatorio                 | No                 |
+| Cliente en domicilio                        | Recomendado        |
+| Cliente para fiado                          | Obligatorio        |
+| Mesa con histórico de múltiples pedidos     | Sí                 |
+| Pedido se cierra después del pago           | Sí                 |
+| División formal de cuenta                   | No                 |
+| Pagos múltiples por venta                   | Sí                 |
+| Modificación de pedido abierto              | Sí                 |
+| Cancelación de pedidos                      | Sí                 |
+| Venta automática al crear pedido            | No                 |
+| Venta al cobrar                             | Sí                 |
+| Inventario exclusivamente en gramos         | No                 |
+| Unidades operativas                         | Sí                 |
+| QUED como entrada de inventario             | No                 |
+| Cierre operativo para QUED                  | Sí                 |
+| Modificación de cuadre cerrado              | Solo administrador |
+| Auditoría                                   | Sí                 |
+| Sistema exclusivo para almuerzos ejecutivos | No                 |
+| Arquitectura modular                        | Sí                 |
+
+## 21.1 Cierre de la etapa de documentación
+
+Con el levantamiento realizado, la definición de requisitos, reglas de negocio, historias de usuario, casos de uso, modelado de procesos, arquitectura propuesta y modelo E-R, la documentación de GIRO queda consolidada para iniciar la etapa de diseño técnico e implementación. Los cambios posteriores deberán gestionarse como solicitudes de cambio y versionarse para evitar ambigüedad.
+
+**SRS GIRO v1.0 — DOCUMENTACIÓN CONSOLIDADA Y CERRADA.**
+
+---
+
+*Pie de página del documento original: GIRO — SRS v1.0 | Página (numerada).*
