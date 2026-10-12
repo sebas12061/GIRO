@@ -42,7 +42,14 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/actuator/health", "/api/v1/public/**", "/api/v1/auth/login").permitAll()
+                .requestMatchers(
+                    "/actuator/health",
+                    "/api/v1/public/**",
+                    "/api/v1/auth/login",
+                    "/swagger-ui.html",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**"
+                ).permitAll()
                 .anyRequest().authenticated())
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

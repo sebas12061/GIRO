@@ -64,7 +64,7 @@ mvn test
 mvn spring-boot:run
 ```
 
-Para iniciar PostgreSQL desde la raíz del proyecto:
+Para iniciar PostgreSQL desde la raíz del proyecto. GIRO usa el puerto host `5433` para evitar conflictos con instalaciones locales de PostgreSQL:
 
 ```powershell
 docker compose up -d postgres
@@ -75,6 +75,35 @@ La API queda disponible en `http://localhost:8080` y el endpoint público de sal
 ```text
 GET http://localhost:8080/api/v1/public/health
 ```
+
+La documentación interactiva OpenAPI queda disponible en:
+
+```text
+http://localhost:8080/swagger-ui/index.html
+```
+
+## Crear datos iniciales de desarrollo
+
+El bootstrap está desactivado por defecto. Para crear un restaurante local, el rol `ADMINISTRADOR`, el permiso `GIRO_ADMIN` y un usuario administrador:
+
+```powershell
+$env:GIRO_BOOTSTRAP_ENABLED="true"
+$env:GIRO_ADMIN_USERNAME="admin"
+$env:GIRO_ADMIN_PASSWORD="cambia-esta-clave-local"
+mvn spring-boot:run
+```
+
+Después del primer arranque puedes iniciar sesión en Swagger con:
+
+```text
+POST /api/v1/auth/login
+{
+	"username": "admin",
+	"password": "cambia-esta-clave-local"
+}
+```
+
+En Swagger pulsa `Authorize` y escribe `Bearer <accessToken>` para probar las rutas protegidas.
 
 La seguridad protege todas las rutas salvo salud y login. El endpoint de autenticación es:
 

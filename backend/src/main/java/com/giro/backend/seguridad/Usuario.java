@@ -63,6 +63,10 @@ public class Usuario implements UserDetails {
         return restauranteId;
     }
 
+    public Set<Rol> getRoles() {
+        return roles;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
