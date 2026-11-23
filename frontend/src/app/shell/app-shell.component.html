@@ -1,0 +1,27 @@
+<div class="app-shell">
+  <aside class="sidebar">
+    <div class="app-brand"><span>G</span><strong>GIRO</strong></div>
+    <nav aria-label="Principal">
+      <a routerLink="/dashboard" routerLinkActive="active">Resumen</a>
+      <a routerLink="/pedidos" routerLinkActive="active">Pedidos</a>
+      <a routerLink="/cocina" routerLinkActive="active">Cocina</a>
+      <a routerLink="/caja" routerLinkActive="active">Caja</a>
+      <a routerLink="/compras" routerLinkActive="active">Compras</a>
+      <a routerLink="/reportes" routerLinkActive="active">Reportes</a>
+    </nav>
+  </aside>
+
+  <main class="workspace">
+    <header class="topbar">
+      <button class="menu-button" type="button" aria-label="Abrir menú">☰</button>
+      <div>
+        <p>Restaurante GIRO</p>
+        <strong>Operación</strong>
+      </div>
+      <button class="logout-button" type="button" (click)="logout()">Salir</button>
+    </header>
+    <section class="content">
+      <router-outlet />
+    </section>
+  </main>
+</div>

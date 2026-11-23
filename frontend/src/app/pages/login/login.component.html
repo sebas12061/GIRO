@@ -1,0 +1,29 @@
+<main class="login-page">
+  <section class="login-panel" aria-labelledby="login-title">
+    <div class="brand-mark" aria-hidden="true">G</div>
+    <div>
+      <p class="eyebrow">GIRO</p>
+      <h1 id="login-title">Ingresar al sistema</h1>
+    </div>
+
+    <form (ngSubmit)="submit()">
+      <label>
+        Usuario
+        <input name="username" [(ngModel)]="username" autocomplete="username" required />
+      </label>
+
+      <label>
+        Contraseña
+        <input name="password" [(ngModel)]="password" type="password" autocomplete="current-password" required />
+      </label>
+
+      @if (errorMessage()) {
+        <p class="error" role="alert">{{ errorMessage() }}</p>
+      }
+
+      <button type="submit" [disabled]="loading()">
+        {{ loading() ? 'Ingresando...' : 'Ingresar' }}
+      </button>
+    </form>
+  </section>
+</main>

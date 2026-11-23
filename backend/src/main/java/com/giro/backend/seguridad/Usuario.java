@@ -37,6 +37,9 @@ public class Usuario implements UserDetails {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
+    @Column(name = "empleado_id")
+    private UUID empleadoId;
+
     @Column(nullable = false)
     private boolean activo = true;
 
@@ -55,6 +58,13 @@ public class Usuario implements UserDetails {
         this.passwordHash = passwordHash;
     }
 
+    public Usuario(UUID restauranteId, UUID empleadoId, String username, String passwordHash) {
+        this.restauranteId = restauranteId;
+        this.empleadoId = empleadoId;
+        this.username = username;
+        this.passwordHash = passwordHash;
+    }
+
     public UUID getId() {
         return id;
     }
@@ -63,8 +73,28 @@ public class Usuario implements UserDetails {
         return restauranteId;
     }
 
+    public UUID getEmpleadoId() {
+        return empleadoId;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
     public Set<Rol> getRoles() {
         return roles;
+    }
+
+    public void activar() {
+        activo = true;
+    }
+
+    public void desactivar() {
+        activo = false;
+    }
+
+    public void cambiarPassword(String nuevoPasswordHash) {
+        passwordHash = nuevoPasswordHash;
     }
 
     @Override

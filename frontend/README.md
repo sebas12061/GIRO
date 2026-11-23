@@ -1,38 +1,36 @@
 # Frontend de GIRO
 
-Esta carpeta contiene la aplicación web responsive para GIRO.
+Aplicación Angular standalone responsive para el sistema GIRO.
 
-## Objetivo
+## Estado actual
 
-Proveer una experiencia de uso para escritorio, tablet y móvil según el perfil del usuario.
+- Configuración Angular standalone
+- Login JWT contra el backend
+- Guard de autenticación
+- Interceptor Bearer
+- Layout responsive con navegación lateral
+- Dashboard inicial
+- Rutas de autenticación y operación
 
-## Módulos esperados
+## Módulos siguientes
 
-- auth
-- dashboard
-- orders
-- kitchen
-- sales
-- cash
-- inventory
-- purchases
-- reports
-- settings
+- Pedidos
+- Cocina
+- Caja
+- Compras
+- Inventario
+- Reportes
+- Configuración y seguridad
 
-## Tecnologías esperadas
+## Instalación
 
-- Angular
-- Angular Material
-- TypeScript
-- Responsive layout
-- State management simple o modular
+Desde esta carpeta:
 
-## Primera tarea
+```powershell
+npm install
+npm start
+```
 
-Crear la base de la aplicación con:
+La aplicación quedará disponible en `http://localhost:4200`.
 
-- layout principal
-- login
-- navegación por roles
-- páginas base para dashboard y pedidos
-- diseño responsive
+El backend debe estar disponible en `http://localhost:8080` y el origen Angular debe estar permitido por `GIRO_CORS_ALLOWED_ORIGINS`.

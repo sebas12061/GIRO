@@ -11,6 +11,31 @@ services:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U giro_user -d giro_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: giro-backend
+    restart: unless-stopped
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/giro_db
+      SPRING_DATASOURCE_USERNAME: giro_user
+      SPRING_DATASOURCE_PASSWORD: giro_pass
+      GIRO_BOOTSTRAP_ENABLED: "true"
+      GIRO_ADMIN_USERNAME: admin
+      GIRO_ADMIN_PASSWORD: admin_2026
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   postgres_data:

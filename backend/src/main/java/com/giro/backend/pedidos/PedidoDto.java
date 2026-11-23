@@ -2,6 +2,7 @@ package com.giro.backend.pedidos;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.UUID;
 
 public record PedidoDto(
@@ -10,6 +11,11 @@ public record PedidoDto(
     Long numero,
     PedidoEstado estado,
     BigDecimal total,
-    OffsetDateTime fechaHora
+    OffsetDateTime fechaHora,
+    UUID mesaId,
+    UUID clienteId,
+    TipoServicio tipoServicio,
+    String observaciones,
+    List<DetallePedidoDto> detalles
 ) {
 }

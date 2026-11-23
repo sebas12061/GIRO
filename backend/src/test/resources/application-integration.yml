@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://127.0.0.1:5433/giro_db}
+    username: ${SPRING_DATASOURCE_USERNAME:giro_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:giro_pass}
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 0
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+giro:
+  bootstrap:
+    enabled: false

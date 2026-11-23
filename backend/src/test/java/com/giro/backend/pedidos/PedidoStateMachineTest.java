@@ -19,4 +19,10 @@ class PedidoStateMachineTest {
         assertThrows(IllegalStateException.class,
             () -> stateMachine.validar(PedidoEstado.CERRADO, PedidoEstado.CONFIRMADO));
     }
+
+    @Test
+    void permiteCancelarAntesDePagar() {
+        assertDoesNotThrow(() ->
+            stateMachine.validar(PedidoEstado.EN_PREPARACION, PedidoEstado.CANCELADO));
+    }
 }

@@ -55,6 +55,44 @@ La primera base ya está creada con:
 - Multi-restaurante: las consultas de pedidos requieren `restauranteId`.
 - BCrypt y method security: RBAC y contraseñas hasheadas están conectados a Spring Security.
 
+## Migraciones y perfiles
+
+La base usa Flyway. JPA valida el esquema y ya no crea/modifica tablas automáticamente.
+
+- Perfil `test`: H2, Flyway desactivado.
+- Perfil `dev`: PostgreSQL y Flyway habilitado.
+- Perfil `prod`: validación y Flyway habilitados.
+
+Migración inicial: `src/main/resources/db/migration/V1__baseline_giro.sql`.
+
+Para iniciar todo el entorno desde Docker:
+
+```powershell
+cd C:\Users\sebas\Documents\Giro
+docker compose up -d --build
+```
+
+## Pruebas de integración PostgreSQL
+
+Con Docker Desktop iniciado:
+
+```powershell
+cd C:\Users\sebas\Documents\Giro
+docker compose up -d postgres
+cd backend
+mvn test "-Dspring.profiles.active=integration"
+```
+
+La prueba `PostgresIntegrationTest` usará PostgreSQL y Flyway. Si PostgreSQL no está disponible, asumirá la prueba en vez de romper la suite normal.
+
+## CORS Angular
+
+El origen local predeterminado es `http://localhost:4200`. Puede cambiarse con:
+
+```powershell
+$env:GIRO_CORS_ALLOWED_ORIGINS="http://localhost:4200,http://127.0.0.1:4200"
+```
+
 ## Ejecutar
 
 Desde esta carpeta:

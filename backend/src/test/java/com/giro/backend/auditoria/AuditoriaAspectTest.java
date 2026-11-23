@@ -15,6 +15,7 @@ import org.mockito.Mockito;
 import com.giro.backend.pedidos.PedidoAudit;
 import com.giro.backend.pedidos.PedidoDto;
 import com.giro.backend.pedidos.PedidoEstado;
+import com.giro.backend.pedidos.TipoServicio;
 
 class AuditoriaAspectTest {
 
@@ -25,7 +26,7 @@ class AuditoriaAspectTest {
         UUID restaurantId = UUID.randomUUID();
         UUID pedidoId = UUID.randomUUID();
         PedidoDto pedido = new PedidoDto(pedidoId, restaurantId, 1L, PedidoEstado.CONFIRMADO,
-            BigDecimal.TEN, OffsetDateTime.now());
+            BigDecimal.TEN, OffsetDateTime.now(), null, null, TipoServicio.MESA, null, java.util.List.of());
         JoinPoint joinPoint = Mockito.mock(JoinPoint.class);
         PedidoAudit audit = Mockito.mock(PedidoAudit.class);
         Mockito.when(audit.action()).thenReturn("CAMBIAR_ESTADO_PEDIDO");

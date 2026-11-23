@@ -2,14 +2,16 @@ package com.giro.backend.pedidos;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-10-17T15:13:59-0500",
-    comments = "version: 1.6.3, compiler: Eclipse JDT (IDE) 3.46.200.v20260930-0211, environment: Java 25.0.4.1 (Eclipse Adoptium)"
+    date = "2026-11-22T22:49:14-0500",
+    comments = "version: 1.6.3, compiler: Eclipse JDT (IDE) 3.46.200.v20261008-1115, environment: Java 25.0.4.1 (Eclipse Adoptium)"
 )
 @Component
 public class PedidoMapperImpl implements PedidoMapper {
@@ -26,6 +28,11 @@ public class PedidoMapperImpl implements PedidoMapper {
         PedidoEstado estado = null;
         BigDecimal total = null;
         OffsetDateTime fechaHora = null;
+        UUID mesaId = null;
+        UUID clienteId = null;
+        TipoServicio tipoServicio = null;
+        String observaciones = null;
+        List<DetallePedidoDto> detalles = null;
 
         id = pedido.getId();
         restauranteId = pedido.getRestauranteId();
@@ -33,9 +40,56 @@ public class PedidoMapperImpl implements PedidoMapper {
         estado = pedido.getEstado();
         total = pedido.getTotal();
         fechaHora = pedido.getFechaHora();
+        mesaId = pedido.getMesaId();
+        clienteId = pedido.getClienteId();
+        tipoServicio = pedido.getTipoServicio();
+        observaciones = pedido.getObservaciones();
+        detalles = detallePedidoListToDetallePedidoDtoList( pedido.getDetalles() );
 
-        PedidoDto pedidoDto = new PedidoDto( id, restauranteId, numero, estado, total, fechaHora );
+        PedidoDto pedidoDto = new PedidoDto( id, restauranteId, numero, estado, total, fechaHora, mesaId, clienteId, tipoServicio, observaciones, detalles );
 
         return pedidoDto;
+    }
+
+    @Override
+    public DetallePedidoDto toDetalleDto(DetallePedido detalle) {
+        if ( detalle == null ) {
+            return null;
+        }
+
+        UUID id = null;
+        UUID productoId = null;
+        UUID opcionMenuId = null;
+        BigDecimal cantidad = null;
+        BigDecimal precioUnitario = null;
+        BigDecimal subtotal = null;
+        String observaciones = null;
+        DetallePedidoEstado estado = null;
+
+        id = detalle.getId();
+        productoId = detalle.getProductoId();
+        opcionMenuId = detalle.getOpcionMenuId();
+        cantidad = detalle.getCantidad();
+        precioUnitario = detalle.getPrecioUnitario();
+        subtotal = detalle.getSubtotal();
+        observaciones = detalle.getObservaciones();
+        estado = detalle.getEstado();
+
+        DetallePedidoDto detallePedidoDto = new DetallePedidoDto( id, productoId, opcionMenuId, cantidad, precioUnitario, subtotal, observaciones, estado );
+
+        return detallePedidoDto;
+    }
+
+    protected List<DetallePedidoDto> detallePedidoListToDetallePedidoDtoList(List<DetallePedido> list) {
+        if ( list == null ) {
+            return null;
+        }
+
+        List<DetallePedidoDto> list1 = new ArrayList<DetallePedidoDto>( list.size() );
+        for ( DetallePedido detallePedido : list ) {
+            list1.add( toDetalleDto( detallePedido ) );
+        }
+
+        return list1;
     }
 }

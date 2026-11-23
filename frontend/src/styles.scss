@@ -1,0 +1,18 @@
+:root {
+  --ink: #17201b;
+  --muted: #68726c;
+  --surface: #ffffff;
+  --canvas: #f3f5f1;
+  --line: #dfe5de;
+  --brand: #d84a32;
+  --brand-dark: #9f2f20;
+  --success: #287a4d;
+  font-family: 'Trebuchet MS', 'Segoe UI', sans-serif;
+  color: var(--ink);
+  background: var(--canvas);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; }
+button, input { font: inherit; }
+button { cursor: pointer; }

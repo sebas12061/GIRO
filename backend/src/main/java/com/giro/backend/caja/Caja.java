@@ -12,11 +12,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 
 @Entity
 @Table(name = "cajas")
 public class Caja {
     @Id @GeneratedValue(strategy = GenerationType.UUID) private UUID id;
+    @Version private Long version;
     @Column(name = "restaurante_id", nullable = false) private UUID restauranteId;
     @Column(nullable = false, precision = 14, scale = 2) private BigDecimal baseInicial;
     @Column(nullable = false) private OffsetDateTime fechaApertura;

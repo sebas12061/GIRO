@@ -6,4 +6,6 @@ import org.mapstruct.Mapper;
 public interface PedidoMapper {
 
     PedidoDto toDto(Pedido pedido);
+
+    DetallePedidoDto toDetalleDto(DetallePedido detalle);
 }
