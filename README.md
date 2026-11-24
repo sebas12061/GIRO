@@ -54,7 +54,7 @@ La interfaz será pensada con diseño responsive, priorizando flujos rápidos pa
 
 La documentación de requisitos fuente está en:
 
-- [SRS_GIRO_v1.0_Consolidado.txt](SRS_GIRO_v1.0_Consolidado.txt)
+- [SRS_GIRO_v1.0_Consolidado.md](SRS_GIRO_v1_0_Consolidado.md)
 
 
 Este proyecto se construye de manera modular, escalable y centrada en la operación real del restaurante.
