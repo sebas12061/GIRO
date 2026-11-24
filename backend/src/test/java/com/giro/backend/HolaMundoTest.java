@@ -9,7 +9,7 @@ public class HolaMundoTest {
     void testHolaMundo() { 
         String mensaje = "Hola Mundo GIRO"; 
         // Verifica que la variable 'mensaje' sea exactamente igual al texto esperado 
-        assertEquals("Hola Mundo GIRO", mensaje);
+        assertEquals("Texto incorrecto", mensaje);
     
     }
 
