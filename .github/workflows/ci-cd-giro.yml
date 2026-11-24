@@ -48,7 +48,7 @@ jobs:
         working-directory: ./frontend
         run: |
           npm ci
-          npm run build -- --configuration=production
+          npm run build
 
   docker-build:
     name: "Docker Build and Push"
