@@ -56,16 +56,5 @@ La documentación de requisitos fuente está en:
 
 - [SRS_GIRO_v1.0_Consolidado.txt](SRS_GIRO_v1.0_Consolidado.txt)
 
-## Siguiente paso
-
-Se iniciará con la base técnica del proyecto, empezando por:
-
-1. Arquitectura general
-2. Estructura de módulos
-3. Modelo de datos inicial
-4. Primer MVP funcional
-5. Preparación para responsive/mobile-first
-
----
 
 Este proyecto se construye de manera modular, escalable y centrada en la operación real del restaurante.
