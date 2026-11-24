@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.giro.backend.seguridad.UsuarioTest
 -------------------------------------------------------------------------------
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.421 s -- in com.giro.backend.seguridad.UsuarioTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.282 s -- in com.giro.backend.seguridad.UsuarioTest
